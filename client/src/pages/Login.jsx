@@ -11,9 +11,8 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
-  const {storeTokenInLs, API} = useAuth();
+  const {storeTokenInLs} = useAuth();
 
-  const URL = `${API}/api/auth/login`
 
   const handleInput=(e)=>{
     let name = e.target.name;
@@ -31,7 +30,7 @@ const Login = () => {
     // console.log(user);
 
     try{
-      const response = await fetch(URL, {
+      const response = await fetch("http://localhost:5000/api/auth/login", {
         method:"POST",
         headers:{
           'Content-Type':'application/json',

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../store/auth';
 import { toast } from 'react-toastify';
-import moment from 'moment';
+// import moment from 'moment';
 
 const AdminUpdate = () => {
     const { authorizationToken } = useAuth();
@@ -23,7 +23,7 @@ const AdminUpdate = () => {
     // Fetch single user data
     const getSingleUserData = async () => {
         try {
-            const response = await fetch(`${API}/api/admin/users/${params.id}`, {
+            const response = await fetch("api/form/contact/api/admin/users/${params.id}", {
                 method: "GET",
                 headers: {
                     "Authorization": authorizationToken,

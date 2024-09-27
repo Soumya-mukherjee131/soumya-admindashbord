@@ -9,7 +9,7 @@ export const AuthProvider = ({children}) => {
     const [isloading, setIsLoading] =useState(true);
     const  authorizationToken = `Bearer ${token}`;
 
-    const API = import.meta.env.VITE_APP_URI_API;
+    // const API = import.meta.env.VITE_APP_URI_API;
 
     const storeTokenInLs = (serverToken) =>{
       setToken(serverToken);
@@ -29,7 +29,7 @@ export const AuthProvider = ({children}) => {
     const userAuthentication = async () => {
         try {
           setIsLoading(true);
-          const response = await fetch(`${API}/api/auth/user`, 
+          const response = await fetch("http://localhost:5000/api/auth/user", 
             {
             method: "GET",
             headers: {
@@ -58,7 +58,7 @@ export const AuthProvider = ({children}) => {
 
 
     return (
-    <AuthContext.Provider value={{isLoggedIn, storeTokenInLs, LogoutUser, user, authorizationToken, isloading, API}}>
+    <AuthContext.Provider value={{isLoggedIn, storeTokenInLs, LogoutUser, user, authorizationToken, isloading}}>
         {children}
     </AuthContext.Provider>
     );
