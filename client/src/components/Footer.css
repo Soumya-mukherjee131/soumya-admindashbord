@@ -1,0 +1,80 @@
+/* Footer Styling */
+
+.footer {
+    background-color: #1a1a2e; /* Dark background to contrast with the rest of the page */
+    color: #fff;
+    padding: 4rem 0;
+    text-align: center;
+    border-top: 1px solid whitesmoke;
+  }
+  
+  .footer-container {
+    width: 80%;
+    margin: 0 auto;
+  }
+  
+  .footer-row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .footer-column {
+    flex-basis: 30%;
+  }
+  
+  .footer-column h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: #00d9ff; /* Light blue for headings */
+  }
+  
+  .footer-column ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-column ul li {
+    margin-bottom: 1rem;
+  }
+  
+  .footer-column ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.4rem;
+    transition: color 0.3s ease;
+  }
+  
+  .footer-column ul li a:hover {
+    color: #00d9ff; /* Hover effect */
+  }
+  
+  .social-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .social-icons a {
+    color: #fff;
+    font-size: 2rem;
+    transition: color 0.3s ease;
+  }
+  
+  .social-icons a:hover {
+    color: #00d9ff;
+  }
+  
+  .footer-bottom {
+    border-top: 1px solid #555;
+    padding-top: 1.5rem;
+  }
+  
+  .footer-bottom p {
+    font-size: 1.2rem;
+    margin: 0;
+    color: #999;
+  }
+  

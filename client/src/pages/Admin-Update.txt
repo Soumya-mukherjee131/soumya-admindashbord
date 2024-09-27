@@ -1,0 +1,343 @@
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useAuth } from '../store/auth';
+import { toast } from 'react-toastify';
+import moment from 'moment';
+
+const AdminUpdate = () => {
+    const { authorizationToken } = useAuth();
+
+    const defaultImageUrl = "https://placehold.co/400";
+    const [data, setData] = useState({
+        username: "",
+        email: "",
+        phone: "",
+        designation: "",
+        gender: "",
+        course: [],
+        image: null,
+        date:"",
+    });
+
+    const params = useParams();
+    //format the date 
+    // const formatDate = (isoString) => {
+    //     return moment(isoString).format('DD-MMM-YYYY');
+    // };
+
+
+    // Fetch single user data
+    const getSingleUserData = async () => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/admin/users/${params.id}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": authorizationToken,
+                },
+            });
+
+            const fetchedData = await response.json();
+            console.log('User data:', fetchedData);
+
+            //checking the image 
+            const imageUrl = fetchedData.image || defaultImageUrl;
+
+            // Format the date if it exists
+            // const formattedDate = fetchedData.date ? formatDate(fetchedData.date) : "";
+
+            // Ensure 'course' is always an array
+            setData({
+                username: fetchedData.username || "",
+                email: fetchedData.email || "",
+                phone: fetchedData.phone || "",
+                designation: fetchedData.designation || "",
+                gender: fetchedData.gender || "",
+                course: Array.isArray(fetchedData.course) ? fetchedData.course : [],
+                image: null,
+                date: date , 
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        getSingleUserData();
+    }, []);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setData({
+            ...data,
+            [name]: value,
+        });
+    };
+
+    const handleCheckboxChange = (e) => {
+        const { value, checked } = e.target;
+        setData((prevData) => ({
+            ...prevData,
+            course: checked
+                ? [...prevData.course, value]
+                : prevData.course.filter((course) => course !== value),
+        }));
+    };
+
+    // const handleImageUpload = (e) => {
+    //     setData({
+    //         ...data,
+    //         image: e.target.files[0],
+    //     });
+    // };
+
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setData({
+                ...data,
+                image: URL.createObjectURL(file), // Preview the uploaded image
+            });
+        } else {
+            setData({
+                ...data,
+                image: defaultImageUrl, // Reset to placeholder if no image
+            });
+        }
+    };
+    
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch(`http://localhost:5000/api/admin/users/update/${params.id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: authorizationToken,
+                },
+                body: JSON.stringify(data),
+            });
+            console.log('Updated data:', data);
+            if (response.ok) {
+                toast.success("Updated successfully");
+            } else {
+                toast.error("Invalid credentials - failed to update");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    //Upload images 
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     const formData = new FormData();
+        
+    //     // Append data to formData
+    //     for (const key in data) {
+    //         if (data.hasOwnProperty(key)) {
+    //             formData.append(key, data[key]);
+    //         }
+    //     }
+    
+    //     // Upload the image first
+    //     try {
+    //         const uploadResponse = await fetch(`http://localhost:5000/api/upload`, {
+    //             method: 'POST',
+    //             body: formData,
+    //         });
+    
+    //         const { imageUrl } = await uploadResponse.json();
+            
+    //         // Now update the user in MongoDB with the image URL
+    //         const userUpdateResponse = await fetch(`http://localhost:5000/api/admin/users/update/${params.id}`, {
+    //             method: 'PUT',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({ ...data, image: imageUrl }), // Include other user data here
+    //         });
+    
+    //         const updatedUser = await userUpdateResponse.json();
+    //         console.log('User updated successfully:', updatedUser);
+    //         toast.success("Updated successfully");
+    //     } catch (error) {
+    //         console.error('Error updating user:', error);
+    //         toast.error("Failed to update");
+    //     }
+    // };
+    
+    return (
+        <>
+            <section className="contact-sections">
+                <div className="contact-containers">
+                    <h1 className="contact-headings">Employee Edit</h1>
+
+                    <form onSubmit={handleSubmit}>
+                        <div>
+                            <label htmlFor="username">Username</label>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                placeholder="Your name"
+                                required
+                                value={data.username}
+                                onChange={handleInputChange}
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor="email">Email</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="Your email"
+                                required
+                                value={data.email}
+                                onChange={handleInputChange}
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor="phone">Phone</label>
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone"
+                                placeholder="Your phone number"
+                                required
+                                value={data.phone}
+                                onChange={handleInputChange}
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor="designation">Designation</label>
+                            <select
+                                id="designation"
+                                name="designation"
+                                value={data.designation}
+                                onChange={handleInputChange}
+                                required
+                            >
+                                <option value="">Select designation</option>
+                                <option value="HR">HR</option>
+                                <option value="Manager">Manager</option>
+                                <option value="Developer">Developer</option>
+                                <option value="Designer">Designer</option>
+                                <option value="Tester">Tester</option>
+                                <option value="Sales">Sales</option>
+                            </select>
+                        </div>
+
+                        {/* Gender Radio Buttons */}
+                        <div>
+                            <label>Gender</label>
+                            <div>
+                                <input
+                                    type="radio"
+                                    id="male"
+                                    name="gender"
+                                    value="Male"
+                                    checked={data.gender === "Male"}
+                                    onChange={handleInputChange}
+                                />
+                                <label htmlFor="male">Male</label>
+                            </div>
+                            <div>
+                                <input
+                                    type="radio"
+                                    id="female"
+                                    name="gender"
+                                    value="Female"
+                                    checked={data.gender === "Female"}
+                                    onChange={handleInputChange}
+                                />
+                                <label htmlFor="female">Female</label>
+                            </div>
+                        </div>
+
+                        {/* Course Checkboxes */}
+                        <div>
+                            <label>Courses</label>
+                            <div>
+                                <input
+                                    type="checkbox"
+                                    id="course1"
+                                    name="course"
+                                    value="MCA"
+                                    checked={data.course?.includes("MCA")}
+                                    onChange={handleCheckboxChange}
+                                />
+                                <label htmlFor="course1">MCA</label>
+
+                                <input
+                                    type="checkbox"
+                                    id="course2"
+                                    name="course"
+                                    value="BSC"
+                                    checked={data.course?.includes("BSC")}
+                                    onChange={handleCheckboxChange}
+                                />
+                                <label htmlFor="course2">BSC</label>
+
+                                <input
+                                    type="checkbox"
+                                    id="course3"
+                                    name="course"
+                                    value="BCA"
+                                    checked={data.course?.includes("BCA")}
+                                    onChange={handleCheckboxChange}
+                                />
+                                <label htmlFor="course3">BCA</label>
+                            </div>
+                        </div>
+
+                        {/* Date Field */}
+                        <div>
+                            <label htmlFor="date">Profile Created Date</label>
+                            <input
+                                    type="date"
+                                    id="date"
+                                    name="date"
+                                    placeholder="Date"
+                                    value={data.date} 
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+
+                        {/* Image Upload */}
+                        <div>
+                            <label htmlFor="image">Upload Image</label>
+                            <input
+                                type="file"
+                                id="image"
+                                name="image"
+                                accept="image/*"
+                                onChange={handleImageUpload}
+                            />
+                        </div>
+
+
+                    {/* Image Preview */}
+                    <div>
+                        <img
+                            src={data.image || defaultImageUrl} // Use data.image or the default image URL
+                            alt="User"
+                            style={{ width: '100px', height: '100px', marginTop: '10px' }} // Style it as needed
+                        />
+                    </div>
+
+                        <button type="submit" className="btn btn-submit">
+                            Update
+                        </button>
+                    </form>
+                </div>
+            </section>
+        </>
+    );
+};
+
+export default AdminUpdate;
