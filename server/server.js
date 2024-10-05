@@ -65,7 +65,7 @@ app.use("/api/admin", adminRoute);
 // Error handling middleware
 app.use(errorMiddleware);
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // Connect to the database and start the server
 connectDb().then(() => {
