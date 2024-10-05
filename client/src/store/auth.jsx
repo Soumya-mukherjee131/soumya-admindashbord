@@ -29,7 +29,8 @@ export const AuthProvider = ({children}) => {
     const userAuthentication = async () => {
         try {
           setIsLoading(true);
-          const response = await fetch("http://localhost:5000/api/auth/user", 
+            //http://localhost:5000/api/auth/user
+          const response = await fetch("https://soumya-admindashbord-backend.onrender.com", 
             {
             method: "GET",
             headers: {
