@@ -38,7 +38,8 @@ const Contact = () => {
     // console.log('Form Data:', formData);
 
     try{
-      const response = await fetch("https://localhost:5000/api/form/contact",
+      //https://localhost:5000/api/form/contact
+      const response = await fetch("https://soumya-admindashbord-backend.onrender.com",
         {
           method:"POST",
           headers:{
