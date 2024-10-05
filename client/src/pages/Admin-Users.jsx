@@ -13,7 +13,8 @@ const AdminUsers = () => {
 
   const getAllUsersData = async ()=>{
     try{
-      const response = await fetch("http://localhost:5000/api/admin/users",
+      //http://localhost:5000/api/admin/users
+      const response = await fetch("https://localhost:5000/api/form/contact",
         {
           method:"GET",
           headers:{
